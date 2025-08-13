@@ -348,6 +348,10 @@ pub fn skip_bytes_to<S: Seek>(seeker: &mut S, pos: u64) -> Result<()> {
 
 pub fn skip_box<S: Seek>(seeker: &mut S, size: u64) -> Result<()> {
     let start = box_start(seeker)?;
+
+    // if we're jumping to the same place, it's probably a bug in the caller
+    assert!(size > 0);
+
     skip_bytes_to(seeker, start + size)?;
     Ok(())
 }
