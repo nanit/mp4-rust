@@ -98,6 +98,11 @@ impl<R: Read + Seek> ReadBox<&mut R> for StblBox {
                 ));
             }
 
+            // Break if size zero BoxHeader, which can result in dead-loop.
+            if s == 0 {
+                break;
+            }
+
             match name {
                 BoxType::StsdBox => {
                     stsd = Some(StsdBox::read_box(reader, s)?);
